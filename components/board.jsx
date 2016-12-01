@@ -6,7 +6,6 @@ class BoardComponent extends React.Component {
     super(props);
 
     this.update = this.props.update;
-    this.board = this.props.board;
     this.renderRow = this.renderRow.bind(this);
     this.renderTile = this.renderTile.bind(this);
   }
@@ -20,9 +19,8 @@ class BoardComponent extends React.Component {
   }
 
 
-
   renderRow () {
-    return this.board.grid.map((row, idx) => {
+    return this.props.board.grid.map((row, idx) => {
       return (
         <div className="game-row group" key={`row+${idx}`}>
           {this.renderTile(row)}
@@ -32,11 +30,10 @@ class BoardComponent extends React.Component {
   }
 
   renderTile (row) {
-    // debugger
     let over = (this.props.board.won() || this.props.board.lost());
     return row.map((tile, idx) => {
       return (
-        <Tile key={idx} tile={tile} over={over} update={this.update}/>
+        <Tile board={this.board} key={idx} tile={tile} over={over} update={this.update}/>
       );
     });
   }

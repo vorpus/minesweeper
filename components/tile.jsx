@@ -14,25 +14,26 @@ class TileComponent extends React.Component {
   }
 
   tileContent () {
+
     // debugger
-    if (this.state.tile.flagged) {
+    if (this.props.tile.flagged) {
       return ('tile-flagged');
     }
-    if ((this.state.tile.bombed && this.state.tile.explored) || (this.props.over && this.state.tile.bombed)) {
+    if ((this.props.tile.bombed && this.props.tile.explored) || (this.props.over && this.props.tile.bombed)) {
       return ("tile-bombed");
     }
-    if (this.state.tile.explored) {
+    if (this.props.tile.explored) {
       return ("tile-revealed");
     }
+    return ("");
   }
 
   render () {
-
     let classes = `game-tile ${this.tileContent()}`;
     let adjacentCount = "";
-    if (this.state.tile.explored && !this.state.tile.bombed) {
-      if (this.state.tile.adjacentBombCount() > 0) {
-        adjacentCount = this.state.tile.adjacentBombCount();
+    if (this.props.tile.explored && !this.props.tile.bombed) {
+      if (this.props.tile.adjacentBombCount() > 0) {
+        adjacentCount = this.props.tile.adjacentBombCount();
       }
     }
 
@@ -42,7 +43,9 @@ class TileComponent extends React.Component {
   }
 
   handleClick (e) {
-    this.props.update(this.state.tile, e.altKey);
+    if (!this.props.over) {
+      this.props.update(this.props.tile, e.altKey);
+    }
     // debugger
   }
 }

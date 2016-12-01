@@ -21561,14 +21561,20 @@
 	  _createClass(Game, [{
 	    key: 'restartGame',
 	    value: function restartGame(e) {
-	      debugger;
+	      // debugger
 	      console.log('resetting');
 	      this.setState({
-	        board: new Minesweeper.Board(10, 10),
+	        board: new Minesweeper.Board(10, 9),
 	        won: false,
 	        lost: false
-
 	      });
+
+	      this.forceUpdate();
+	    }
+	  }, {
+	    key: 'componentDidUpdate',
+	    value: function componentDidUpdate() {
+	      // debugger
 	    }
 	  }, {
 	    key: 'updateGame',
@@ -21594,9 +21600,13 @@
 	        null,
 	        _react2.default.createElement(_board2.default, { board: this.state.board, update: this.updateGame }),
 	        _react2.default.createElement(
-	          'strong',
-	          { onClick: this.restartGame },
-	          'restart'
+	          'section',
+	          { className: 'button-controls' },
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.restartGame },
+	            '\uD83D\uDE42'
+	          )
 	        )
 	      );
 	    }
@@ -21806,7 +21816,6 @@
 	    var _this = _possibleConstructorReturn(this, (BoardComponent.__proto__ || Object.getPrototypeOf(BoardComponent)).call(this, props));
 
 	    _this.update = _this.props.update;
-	    _this.board = _this.props.board;
 	    _this.renderRow = _this.renderRow.bind(_this);
 	    _this.renderTile = _this.renderTile.bind(_this);
 	    return _this;
@@ -21826,7 +21835,7 @@
 	    value: function renderRow() {
 	      var _this2 = this;
 
-	      return this.board.grid.map(function (row, idx) {
+	      return this.props.board.grid.map(function (row, idx) {
 	        return _react2.default.createElement(
 	          'div',
 	          { className: 'game-row group', key: 'row+' + idx },
@@ -21839,10 +21848,9 @@
 	    value: function renderTile(row) {
 	      var _this3 = this;
 
-	      // debugger
 	      var over = this.props.board.won() || this.props.board.lost();
 	      return row.map(function (tile, idx) {
-	        return _react2.default.createElement(_tile2.default, { key: idx, tile: tile, over: over, update: _this3.update });
+	        return _react2.default.createElement(_tile2.default, { board: _this3.board, key: idx, tile: tile, over: over, update: _this3.update });
 	      });
 	    }
 	  }]);
@@ -21897,26 +21905,27 @@
 	  _createClass(TileComponent, [{
 	    key: 'tileContent',
 	    value: function tileContent() {
+
 	      // debugger
-	      if (this.state.tile.flagged) {
+	      if (this.props.tile.flagged) {
 	        return 'tile-flagged';
 	      }
-	      if (this.state.tile.bombed && this.state.tile.explored || this.props.over && this.state.tile.bombed) {
+	      if (this.props.tile.bombed && this.props.tile.explored || this.props.over && this.props.tile.bombed) {
 	        return "tile-bombed";
 	      }
-	      if (this.state.tile.explored) {
+	      if (this.props.tile.explored) {
 	        return "tile-revealed";
 	      }
+	      return "";
 	    }
 	  }, {
 	    key: 'render',
 	    value: function render() {
-
 	      var classes = 'game-tile ' + this.tileContent();
 	      var adjacentCount = "";
-	      if (this.state.tile.explored && !this.state.tile.bombed) {
-	        if (this.state.tile.adjacentBombCount() > 0) {
-	          adjacentCount = this.state.tile.adjacentBombCount();
+	      if (this.props.tile.explored && !this.props.tile.bombed) {
+	        if (this.props.tile.adjacentBombCount() > 0) {
+	          adjacentCount = this.props.tile.adjacentBombCount();
 	        }
 	      }
 
@@ -21929,7 +21938,9 @@
 	  }, {
 	    key: 'handleClick',
 	    value: function handleClick(e) {
-	      this.props.update(this.state.tile, e.altKey);
+	      if (!this.props.over) {
+	        this.props.update(this.props.tile, e.altKey);
+	      }
 	      // debugger
 	    }
 	  }]);

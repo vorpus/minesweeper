@@ -18,14 +18,19 @@ class Game extends React.Component {
   }
 
   restartGame (e) {
-    debugger
+    // debugger
     console.log('resetting');
     this.setState({
-      board: new Minesweeper.Board(10,10),
+      board: new Minesweeper.Board(10,9),
       won: false,
       lost: false
-
     });
+
+    this.forceUpdate();
+  }
+
+  componentDidUpdate() {
+    // debugger
   }
 
   updateGame (tile, altkey) {
@@ -47,7 +52,9 @@ class Game extends React.Component {
     return (
       <div>
         <BoardComponent board={this.state.board} update={this.updateGame} />
-         <strong onClick={this.restartGame}>restart</strong>
+        <section className="button-controls">
+         <button onClick={this.restartGame}>🙂</button>
+        </section>
       </div>
     );
   }
